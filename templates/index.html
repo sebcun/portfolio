@@ -22,6 +22,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/loading.css')}}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/universe.css')}}"
+    />
   </head>
 
   {# Body #}
@@ -38,6 +42,26 @@
         />
       </div>
       <h1 class="bold">Loading the universe<span id="loading-dots"></span></h1>
+    </div>
+
+    {# Universe #}
+    <div id="universe-container">
+      <canvas id="space-map"></canvas>
+
+      <div id="controls">
+        <button id="reset-view" title="Reset View">🏠</button>
+        <div id="zoom-controls">
+          <button id="zoom-in" title="Zoom In">+</button
+          ><button id="zoom-out" title="Zoom Out">-</button>
+        </div>
+        <button id="view-info" title="View Info">ℹ️</button>
+      </div>
+
+      <div id="info-panel" class="hidden">
+        <button id="close-panel">x</button>
+        <h2 id="panel-name"></h2>
+        <div id="panel-container"></div>
+      </div>
     </div>
   </body>
 
@@ -67,5 +91,11 @@
       dots = (dots + 1) % 4;
       loadingDots.textContent = ".".repeat(dots);
     }, 500);
+  </script>
+  <script src="{{ url_for('static', filename='js/panel.js') }}"></script>
+  <script>
+    setTimeout(() => {
+      document.getElementById("loading-screen").classList.add("hidden");
+    }, 5000);
   </script>
 </html>
