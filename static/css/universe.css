@@ -10,6 +10,13 @@
   cursor: grabbing;
 }
 
+#space-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+}
+
 /* Controls */
 #controls {
   position: fixed;

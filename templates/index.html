@@ -73,6 +73,12 @@
 
   {# Scripts #}
   <script>
+    // Images
+    const earthImagePath =
+      "{{ url_for('static', filename='images/earth.png') }}";
+    const githubImagePath =
+      "{{ url_for('static', filename='images/github.png') }}";
+
     // Spinner Click
     const sound = document.getElementById("spinner-click-sound");
     document
@@ -93,9 +99,6 @@
     }, 500);
   </script>
   <script src="{{ url_for('static', filename='js/panel.js') }}"></script>
-  <script>
-    setTimeout(() => {
-      document.getElementById("loading-screen").classList.add("hidden");
-    }, 5000);
-  </script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/space-engine.js') }}"></script>
 </html>
