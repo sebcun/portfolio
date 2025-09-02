@@ -8,7 +8,7 @@ class App {
     this.initUI();
   }
 
-  initUI() {
+  async initUI() {
     const resetBtn = document.getElementById("reset-view");
     const zoomInBtn = document.getElementById("zoom-in");
     const zoomOutBtn = document.getElementById("zoom-out");
@@ -32,12 +32,16 @@ class App {
     };
 
     this.spaceEngine.loadStars();
-    this.spaceEngine.loadItems();
-    this.spaceEngine.start();
-
-    setTimeout(() => {
+    const loadItemsResult = await this.spaceEngine.loadItems();
+    if (loadItemsResult === true) {
+      this.spaceEngine.start();
       document.getElementById("loading-screen").classList.add("hidden");
-    }, 1000);
+    } else {
+      showPanel(
+        "Oh no!",
+        `There was an issue while loading the contents of my portfolio! Please try refreshing the page to try again or contact me at <b>@catchc</b> with the error <b>${loadItemsResult}</b>.`
+      );
+    }
   }
 }
 

@@ -111,63 +111,28 @@ class SpaceEngine {
   }
 
   // Load Items
-  loadItems() {
-    this.items = [
-      {
-        item: "galaxy",
-        image: "milkyway",
-        x: 0,
-        y: 0,
-        size: 250,
-        color: "#000000",
-        name: "About me",
-        contents: [
-          {
-            item: "planet",
-            image: "earth",
-            x: 0,
-            y: 0,
-            size: 350,
-            color: "#ffffff",
-            type: "home",
-            name: "Home",
-          },
-          {
-            item: "planet",
-            image: "earth",
-            x: 780,
-            y: 300,
-            size: 250,
-            color: "#88ccff",
-            type: "panel",
-            name: "About Me",
-            contents:
-              "<bold>Hi!</bold> My name is <b>Sebastian Cunningham</b> and I am a 17 year old highschool student from <b>Melbourne, Australia</b>.<br><br>In the future, I want to become a software engineer/developer, or go into cybersecurity.<br><br>In my spare time, I am a competitive swimmer training up to 18 hours every week. Apart from that, I also like to code small side projects, cook (savoury, never sweet), and build LEGO.",
-          },
-          {
-            item: "planet",
-            image: "github",
-            x: -780,
-            y: -300,
-            size: 250,
-            color: "#ffffff",
-            type: "link",
-            name: "GitHub",
-            contents: "https://github.com/sebcun",
-          },
-        ],
-      },
-    ];
-    this.galaxies = this.items;
-
-    this.items.forEach((item) => {
-      this.itemSizeMultipliers.set(item, 1.0);
-      if (item.contents) {
-        item.contents.forEach((subItem) => {
-          this.itemSizeMultipliers.set(subItem, 1.0);
-        });
+  async loadItems() {
+    try {
+      const response = await fetch("/api/contents");
+      if (!response.ok) {
+        throw new Error(response.status);
       }
-    });
+      const data = await response.json();
+      this.items = data;
+      this.galaxies = this.items;
+
+      this.items.forEach((item) => {
+        this.itemSizeMultipliers.set(item, 1.0);
+        if (item.contents) {
+          item.contents.forEach((subItem) => {
+            this.itemSizeMultipliers.set(subItem, 1.0);
+          });
+        }
+      });
+      return true;
+    } catch (error) {
+      return error;
+    }
   }
 
   // Get Items At
