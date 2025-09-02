@@ -2,6 +2,7 @@ class App {
   constructor() {
     this.canvas = document.getElementById("space-map");
     this.spaceEngine = new SpaceEngine(this.canvas);
+    this.soundEngine = new SoundEngine();
     this.portfolioData = null;
 
     this.initUI();
@@ -13,10 +14,20 @@ class App {
     const zoomOutBtn = document.getElementById("zoom-out");
 
     this.spaceEngine.onItemClick = (item) => {
-      if (item.type == "panel") {
-        showPanel(item.name, item.contents);
+      if (item.item == "galaxy") {
+        this.soundEngine.play("ufo");
+        this.spaceEngine.start(item.contents);
       } else {
-        window.open(item.contents, "_blank");
+        if (item.type == "panel") {
+          this.soundEngine.play("transition");
+          showPanel(item.name, item.contents);
+        } else if (item.type == "link") {
+          this.soundEngine.play("transition");
+          window.open(item.contents, "_blank");
+        } else {
+          this.soundEngine.play("ufo");
+          this.spaceEngine.start();
+        }
       }
     };
 

@@ -4,6 +4,7 @@ class SpaceEngine {
     this.ctx = canvas.getContext("2d");
     this.stars = [];
     this.items = [];
+    this.itemSizeMultipliers = new Map();
 
     // View Camera
     this.camera = {
@@ -20,18 +21,26 @@ class SpaceEngine {
     this.isDragging = false;
     this.lastMousePos = { x: 0, y: 0 };
     this.currentHovered = null;
+    this.currentContents = undefined;
 
     // Animation
     this.animationTime = 0;
     this.isRunning = false;
+    this.animationId = null;
 
-    // Images
+    // Planet Images
     this.planetImages = {
       earth: new Image(),
       github: new Image(),
     };
     this.planetImages.earth.src = earthImagePath;
     this.planetImages.github.src = githubImagePath;
+
+    // Galaxy Images
+    this.galaxyImages = {
+      milkyway: new Image(),
+    };
+    this.galaxyImages.milkyway.src = milkywayImagePath;
 
     this.setupCanvas();
     this.bindEvents();
@@ -103,43 +112,73 @@ class SpaceEngine {
 
   // Load Items
   loadItems() {
-    this.items = {
-      planets: [
-        {
-          image: "earth",
-          x: 0,
-          y: 0,
-          size: 250,
-          color: "#88ccff",
-          type: "panel",
-          name: "About Me",
-          contents:
-            "<bold>Hi!</bold> My name is <b>Sebastian Cunningham</b> and I am a 17 year old highschool student from <b>Melbourne, Australia</b>.<br><br>In the future, I want to become a software engineer/developer, or go into cybersecurity.<br><br>In my spare time, I am a competitive swimmer training up to 18 hours every week. Apart from that, I also like to code small side projects, cook (savoury, never sweet), and build LEGO.",
-        },
-        {
-          image: "github",
-          x: -780,
-          y: -300,
-          size: 250,
-          color: "#ffffff",
-          type: "link",
-          name: "GitHub",
-          contents: "https://github.com/sebcun",
-        },
-      ],
-      galaxies: [],
-    };
+    this.items = [
+      {
+        item: "galaxy",
+        image: "milkyway",
+        x: 0,
+        y: 0,
+        size: 250,
+        color: "#000000",
+        name: "About me",
+        contents: [
+          {
+            item: "planet",
+            image: "earth",
+            x: 0,
+            y: 0,
+            size: 350,
+            color: "#ffffff",
+            type: "home",
+            name: "Home",
+          },
+          {
+            item: "planet",
+            image: "earth",
+            x: 780,
+            y: 300,
+            size: 250,
+            color: "#88ccff",
+            type: "panel",
+            name: "About Me",
+            contents:
+              "<bold>Hi!</bold> My name is <b>Sebastian Cunningham</b> and I am a 17 year old highschool student from <b>Melbourne, Australia</b>.<br><br>In the future, I want to become a software engineer/developer, or go into cybersecurity.<br><br>In my spare time, I am a competitive swimmer training up to 18 hours every week. Apart from that, I also like to code small side projects, cook (savoury, never sweet), and build LEGO.",
+          },
+          {
+            item: "planet",
+            image: "github",
+            x: -780,
+            y: -300,
+            size: 250,
+            color: "#ffffff",
+            type: "link",
+            name: "GitHub",
+            contents: "https://github.com/sebcun",
+          },
+        ],
+      },
+    ];
+    this.galaxies = this.items;
+
+    this.items.forEach((item) => {
+      this.itemSizeMultipliers.set(item, 1.0);
+      if (item.contents) {
+        item.contents.forEach((subItem) => {
+          this.itemSizeMultipliers.set(subItem, 1.0);
+        });
+      }
+    });
   }
 
   // Get Items At
-  getItemAt(worldX, worldY) {
-    for (let planet of this.items["planets"]) {
-      const dx = worldX - planet.x;
-      const dy = worldY - planet.y;
+  getItemAt(worldX, worldY, items) {
+    for (let galaxy of this.items) {
+      const dx = worldX - galaxy.x;
+      const dy = worldY - galaxy.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
-      if (distance <= planet.size / 2) {
-        return planet;
+      if (distance <= galaxy.size / 2) {
+        return galaxy;
       }
     }
     return null;
@@ -171,6 +210,14 @@ class SpaceEngine {
       this.constrainCamera();
       this.lastMousePos = { x: e.clientX, y: e.clientY };
     }
+
+    const worldPos = this.screenToWorld(e.clientX, e.clientY);
+    const itemsToCheck =
+      this.currentContents === undefined ? this.galaxies : this.currentContents;
+    const hoveredItem = this.getItemAt(worldPos.x, worldPos.y, itemsToCheck);
+    this.currentHovered = hoveredItem;
+
+    this.canvas.style.cursor = hoveredItem ? "pointer" : "grab";
   }
 
   // On Wheel, change zoom
@@ -186,7 +233,11 @@ class SpaceEngine {
   onClick(e) {
     if (!this.isDragging) {
       const worldPos = this.screenToWorld(e.clientX, e.clientY);
-      const clickedItem = this.getItemAt(worldPos.x, worldPos.y);
+      const itemsToCheck =
+        this.currentContents === undefined
+          ? this.galaxies
+          : this.currentContents;
+      const clickedItem = this.getItemAt(worldPos.x, worldPos.y, itemsToCheck);
 
       if (clickedItem && this.onItemClick) {
         this.onItemClick(clickedItem);
@@ -226,26 +277,36 @@ class SpaceEngine {
 
   //      Animation Functions
   // Start
-  start() {
+  start(contents) {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
     this.isRunning = true;
-    this.animate();
+    this.animate(contents);
   }
 
   // Stop
   stop() {
     this.isRunning = false;
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
   }
 
   // Animation
-  animate() {
+  animate(contents) {
     if (!this.isRunning) return;
     this.animationTime += 0.016;
-    this.render();
-    requestAnimationFrame(() => this.animate());
+    this.render(contents);
+    this.animationId = requestAnimationFrame(() => this.animate(contents));
   }
 
   //      Render Functions
-  render() {
+  // Main Render
+  render(contents) {
+    this.currentContents = contents;
     this.ctx.fillStyle = "#0a0a0f";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
@@ -255,11 +316,18 @@ class SpaceEngine {
     this.ctx.translate(-this.camera.x, -this.camera.y);
 
     this.renderStars();
-    this.renderPlanets();
+    if (contents === undefined) {
+      this.items = this.galaxies;
+      this.renderGalaxies();
+    } else {
+      this.items = contents;
+      this.renderPlanets();
+    }
 
     this.ctx.restore();
   }
 
+  // Render Stars
   renderStars() {
     this.ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
 
@@ -276,24 +344,94 @@ class SpaceEngine {
     this.ctx.globalAlpha = 1;
   }
 
+  // Render Galaxies
+  renderGalaxies() {
+    for (let galaxy of this.items) {
+      this.renderGalaxy(galaxy);
+    }
+  }
+
+  // Render Galaxy
+  renderGalaxy(galaxy) {
+    const isHovered = this.currentHovered === galaxy;
+
+    const targetMultiplier = isHovered ? 1.15 : 1.0;
+    const currentMultiplier = this.itemSizeMultipliers.get(galaxy) || 1.0;
+    let postMultiplier =
+      currentMultiplier + (targetMultiplier - currentMultiplier) * 0.1;
+    this.itemSizeMultipliers.set(galaxy, postMultiplier);
+
+    const pulse = Math.sin(this.animationTime * 2) * 0.03 + 0.9;
+    const size = galaxy.size * postMultiplier * pulse;
+
+    const jiggleFactor = isHovered ? 1 : 0;
+    const jiggleX = jiggleFactor * Math.sin(this.animationTime * 8) * 3;
+    const jiggleY = jiggleFactor * Math.cos(this.animationTime * 8) * 3;
+
+    if (this.galaxyImages[galaxy.image].complete) {
+      this.ctx.imageSmoothingEnabled = true;
+      this.ctx.imageSmoothingQuality = "high";
+
+      this.ctx.drawImage(
+        this.galaxyImages[galaxy.image],
+        galaxy.x - size / 2 + jiggleX,
+        galaxy.y - size / 2 + jiggleY,
+        size,
+        size
+      );
+    }
+
+    if (this.camera.zoom > 0.8) {
+      // let textMultiplier = 1;
+      // if (isHovered) {
+      //   textMultiplier += 0.5;
+      // }
+      this.ctx.save();
+      this.ctx.scale(1 / this.camera.zoom, 1 / this.camera.zoom);
+      this.ctx.fillStyle = "white";
+      this.ctx.font = `${isHovered ? "900" : "700"} ${
+        30 * postMultiplier
+      }px 'TASA Explorer', sans-serif`;
+      this.ctx.textAlign = "center";
+      this.ctx.fillText(
+        galaxy.name,
+        galaxy.x * this.camera.zoom,
+        (galaxy.y + size - 80) * this.camera.zoom
+      );
+      this.ctx.restore();
+    }
+  }
+
+  // Render Planets
   renderPlanets() {
-    for (let planet of this.items["planets"]) {
+    for (let planet of this.items) {
       this.renderPlanet(planet);
     }
   }
 
+  // Render Planet
   renderPlanet(planet) {
     const isHovered = this.currentHovered === planet;
-    const pulse = Math.sin(this.animationTime * 2) * 0.03 + 0.9;
-    const size = planet.size * (isHovered ? 1.1 : 1) * pulse;
+    const targetMultiplier = isHovered ? 1.15 : 1.0;
+    const currentMultiplier = this.itemSizeMultipliers.get(planet) || 1.0;
+    const postMultiplier =
+      currentMultiplier + (targetMultiplier - currentMultiplier) * 0.1;
+    this.itemSizeMultipliers.set(planet, postMultiplier);
+
+    const pulse = Math.sin(this.animationTime * 2) * 0.01 + 0.9;
+    const size = planet.size * postMultiplier * pulse;
+
+    const jiggleFactor = isHovered ? 1 : 0;
+    const jiggleX = jiggleFactor * Math.sin(this.animationTime * 8) * 3;
+    const jiggleY = jiggleFactor * Math.cos(this.animationTime * 8) * 3;
 
     const gradient = this.ctx.createRadialGradient(
-      planet.x,
-      planet.y,
+      planet.x + jiggleX,
+      planet.y + jiggleY,
       0,
-      planet.x,
-      planet.y,
-      size * 0.7
+      planet.x + jiggleY,
+      planet.y + jiggleX,
+      size * 0.55
     );
     gradient.addColorStop(0, planet.color + "66");
     gradient.addColorStop(0.7, planet.color + "22");
@@ -301,7 +439,13 @@ class SpaceEngine {
 
     this.ctx.fillStyle = gradient;
     this.ctx.beginPath();
-    this.ctx.arc(planet.x, planet.y, size * 1.2, 0, Math.PI * 2);
+    this.ctx.arc(
+      planet.x + jiggleX,
+      planet.y + jiggleY,
+      size * 1.2,
+      0,
+      Math.PI * 2
+    );
     this.ctx.fill();
 
     if (this.planetImages[planet.image].complete) {
@@ -310,8 +454,8 @@ class SpaceEngine {
 
       this.ctx.drawImage(
         this.planetImages[planet.image],
-        planet.x - size / 2,
-        planet.y - size / 2,
+        planet.x - size / 2 + jiggleX,
+        planet.y - size / 2 + jiggleY,
         size,
         size
       );
@@ -321,12 +465,14 @@ class SpaceEngine {
       this.ctx.save();
       this.ctx.scale(1 / this.camera.zoom, 1 / this.camera.zoom);
       this.ctx.fillStyle = "white";
-      this.ctx.font = "bold 32px 'TASA Explorer', sans-serif";
+      this.ctx.font = `${isHovered ? "900" : "700 "} ${
+        30 * postMultiplier
+      }px 'TASA Explorer', sans-serif`;
       this.ctx.textAlign = "center";
       this.ctx.fillText(
         planet.name,
-        planet.x * this.camera.zoom,
-        (planet.y + size - 30) * this.camera.zoom
+        (planet.x + jiggleY) * this.camera.zoom,
+        (planet.y + size - 80 + jiggleY) * this.camera.zoom
       );
       this.ctx.restore();
     }

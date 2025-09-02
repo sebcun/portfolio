@@ -65,28 +65,41 @@
     </div>
   </body>
 
-  {# Audios #}
-  <audio
-    id="spinner-click-sound"
-    src="{{ url_for('static', filename='audios/click.mp3')}}"
-  ></audio>
+  {# Scripts #} {# Imports #}
+  <script src="{{ url_for('static', filename='js/panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/space-engine.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/sound-engine.js') }}"></script>
 
-  {# Scripts #}
+  {# Paths #}
   <script>
     // Images
     const earthImagePath =
       "{{ url_for('static', filename='images/earth.png') }}";
     const githubImagePath =
       "{{ url_for('static', filename='images/github.png') }}";
+    const milkywayImagePath =
+      "{{ url_for('static', filename='images/milkyway.png') }}";
+    const clickSoundPath =
+      "{{ url_for('static', filename='audios/click.mp3')}}";
+    const ambienceSoundPath =
+      "{{ url_for('static', filename='audios/ambience.mp3')}}";
+    const transitionSoundPath =
+      "{{ url_for('static', filename='audios/transition.mp3')}}";
+    const ufoSoundPath = "{{ url_for('static', filename='audios/ufo.mp3')}}";
 
+    const soundEngine = new SoundEngine();
+  </script>
+
+  {# Loading #}
+  <script>
     // Spinner Click
     const sound = document.getElementById("spinner-click-sound");
     document
       .getElementById("spinner-wrapper")
       .addEventListener("click", function () {
         this.classList.add("clicked");
-        sound.currentTime = 0;
-        sound.play();
+        soundEngine.play("click");
         setTimeout(() => this.classList.remove("clicked"), 200);
       });
 
@@ -97,8 +110,14 @@
       dots = (dots + 1) % 4;
       loadingDots.textContent = ".".repeat(dots);
     }, 500);
+
+    let ambiencePlaying = false;
+
+    document.addEventListener("click", function () {
+      if (!ambiencePlaying) {
+        soundEngine.playLoop("ambience");
+        ambiencePlaying = true;
+      }
+    });
   </script>
-  <script src="{{ url_for('static', filename='js/panel.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/space-engine.js') }}"></script>
 </html>
