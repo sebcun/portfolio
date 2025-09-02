@@ -14,10 +14,29 @@ body {
   font-optical-sizing: auto;
 }
 
+/* Fonts */
 .bold {
   font-weight: 800;
 }
 
 .extrabold {
   font-weight: 800;
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* Cards */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

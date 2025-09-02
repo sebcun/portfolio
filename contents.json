@@ -21,6 +21,90 @@
       {
         "item": "planet",
         "image": "earth",
+        "x": 340,
+        "y": 100,
+        "size": 350,
+        "color": "#ffffff",
+        "type": "panel",
+        "name": "Example",
+        "contents": [
+          {
+            "type": "bold",
+            "content": "asdasd"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "text",
+            "content": "asd"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "italic",
+            "content": "asd"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "italicbold",
+            "content": "asd"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": ["Hello", "https://google.com"]
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "image",
+            "content": [
+              "Hello",
+              "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
+            ]
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "code",
+            "content": [true, "console.log('Welcome!');"]
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "card",
+            "content": [
+              { "type": "bold", "content": "Project Title" },
+              { "type": "br" },
+              { "type": "text", "content": "A cool project description." },
+              { "type": "br" },
+              {
+                "type": "link",
+                "content": [
+                  "View on GitHub",
+                  "https://github.com/sebcun/project"
+                ]
+              },
+              {
+                "type": "image",
+                "content": ["Screenshot", "static/images/project.png"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "item": "planet",
+        "image": "earth",
         "x": 780,
         "y": 300,
         "size": 250,

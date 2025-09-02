@@ -240,6 +240,13 @@ class SpaceEngine {
     this.zoomAt(this.camera.x, this.camera.y, factor);
   }
 
+  // Reset View
+  resetView() {
+    this.camera.x = 0;
+    this.camera.y = 0;
+    this.camera.zoom = 1;
+  }
+
   //      Animation Functions
   // Start
   start(contents) {
