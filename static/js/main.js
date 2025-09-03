@@ -15,14 +15,11 @@ class App {
 
     // Clicks of galaxy/panels
     this.spaceEngine.onItemClick = (item) => {
-      console.log(item);
       if (item.item == "galaxy") {
         if (item.protected && !this.spaceEngine.unlockedGalaxies.has(item)) {
           return;
         }
-        console.log(1);
         if (item.name === "Admin") {
-          console.log(2);
           const loggedIn = localStorage.getItem("admin") === "true";
           if (!loggedIn) {
             const password = prompt("Enter admin password:");
@@ -97,8 +94,16 @@ class App {
         if (galaxy) {
           this.spaceEngine.items.forEach((item) => {
             if (item.name === galaxy) {
-              this.spaceEngine.start(item.contents);
-              document.getElementById("loading-screen").classList.add("hidden");
+              if (item.name == "Admin") {
+                document
+                  .getElementById("loading-screen")
+                  .classList.add("hidden");
+              } else {
+                this.spaceEngine.start(item.contents);
+                document
+                  .getElementById("loading-screen")
+                  .classList.add("hidden");
+              }
             }
           });
         } else {

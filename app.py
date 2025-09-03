@@ -38,9 +38,18 @@ def createPlanet():
     content = data.get('content')
     image = data.get('image')
     galaxyName = data.get('galaxy')
+    xPos = data.get('x')
+    yPos = data.get('y')
+    size = data.get('size')
 
     if not name or not content or not image or not galaxyName:
         return jsonify({"error": "Missing required fields: name, content, image, galaxy"}), 400
+    
+    if galaxyName != "Public" and not session.get('admin'):
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    if (xPos or yPos or size) and not session.get('admin'):
+        return jsonify({"error": "Unauthorized"}), 403
     
     with open('contents.json', 'r') as f:
         contents = json.load(f)
@@ -54,19 +63,33 @@ def createPlanet():
             targetGalaxy = galaxy
             break
 
-
     angle = random.uniform(0, 2* math.pi)
     radius = random.randint(200, 1000)
-    x = int(radius * math.cos(angle))
-    y = int(radius * math.sin(angle))
-    size = random.randint(100, 200)
+
+    if not xPos:
+        xPos = int(radius * math.cos(angle))
+    if not yPos:
+        yPos = int(radius * math.sin(angle))
+
+    if size:
+        sizeMap = {
+            "size-xs": 100,
+            "size-s": 125,
+            "size-m": 150,
+            "size-l": 175,
+            "size-xl": 200
+        }
+        size = sizeMap.get(size, 150)
+    else:
+        size = random.randint(100, 200)
+        
     color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
     planet = {
         "item": "planet",
         "image": "earth",
-        "x": x,
-        "y": y,
+        "x": int(xPos),
+        "y": int(yPos),
         "size": size,
         "color": color,
         "type": "panel",

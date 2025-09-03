@@ -280,6 +280,22 @@ function showAdminCreatePanel(galaxies) {
       <div id="blocks-list"></div>
     </div><br>
 
+    <label for="planet-positions">Position:</label>
+    <div id="planet-positions">
+      <input type="number" id="planet-x" name="x" placeholder="X" required>
+      <input type="number" id="planet-y" name="y" placeholder="Y" required>
+    </div><br>
+
+    <label>Size:</label>
+    <div class="size-picker">
+      <input type="radio" id="size-xs" name="size" value="size-xs"><label for="size-xs">XS</label>
+      <input type="radio" id="size-s" name="size" value="size-s"><label for="size-s">S</label>
+      <input type="radio" id="size-m" name="size" value="size-m" checked><label for="size-m">M</label>
+      <input type="radio" id="size-l" name="size" value="size-l"><label for="size-l">L</label>
+      <input type="radio" id="size-xl" name="size" value="size-xl"><label for="size-xl">XL</label>
+    </div><br>
+    
+
     <label>Planet:</label>
     <div class="image-picker">
       <input type="radio" id="earth" name="image" value="earth" checked><label for="earth">🌍</label>
@@ -385,6 +401,9 @@ function showAdminCreatePanel(galaxies) {
     const name = formData.get("name");
     const image = formData.get("image");
     const galaxy = formData.get("galaxy");
+    const x = formData.get("x");
+    const y = formData.get("y");
+    const size = formData.get("size");
 
     const blocks = [];
     const blockItems = blocksList.querySelectorAll(".block-item");
@@ -403,7 +422,7 @@ function showAdminCreatePanel(galaxies) {
       blocks.push(blockData);
     });
 
-    const data = { name, content: blocks, image, galaxy };
+    const data = { name, content: blocks, image, galaxy, x, y, size };
 
     try {
       const response = await fetch("/api/createplanet", {

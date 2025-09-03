@@ -53,6 +53,7 @@ body {
 }
 
 #create-planet-form input[type="text"],
+#create-planet-form input[type="number"],
 #create-planet-form textarea,
 #create-planet-form select {
   background: rgba(255, 255, 255, 0.1);
@@ -191,6 +192,47 @@ body {
 
 .image-picker input[type="radio"]:checked + label {
   background: rgba(255, 255, 255, 0.3);
+}
+
+#planet-positions {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+#planet-positions input {
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.size-picker {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.size-picker label {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.3s ease;
+  flex: 1;
+}
+
+.size-picker input[type="radio"] {
+  display: none;
+}
+
+.size-picker input[type="radio"]:hover + label {
+  background: rgba(255, 255, 255, 0.2);
+}
+.size-picker input[type="radio"]:checked + label {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Toasts */
