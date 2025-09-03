@@ -58,6 +58,8 @@ class App {
           showCreatePanel("Public");
         } else if (item.type == "createadmin") {
           showAdminCreatePanel(this.spaceEngine.galaxies);
+        } else if (item.type == "managepending") {
+          showPendingPanel();
         } else if (item.type == "logout") {
           fetch("/api/logout", {
             method: "POST",

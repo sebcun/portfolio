@@ -2,7 +2,7 @@ const toast = document.getElementById("toast");
 const toastText = document.getElementById("toast-text");
 let toastTimeout;
 
-function showToast(message, style = "default", duration = 3000) {
+function showToast(message, style = "default", duration = 3500) {
   toast.classList.remove("show", "default");
   toastText.textContent = message;
   toast.classList.add("show");

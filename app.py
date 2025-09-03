@@ -1,8 +1,14 @@
 from flask import Flask, render_template, jsonify, request, session
-import json, math, random
+from dotenv import load_dotenv
+import json, math, random, os
+
+
+load_dotenv()
+
 
 app = Flask(__name__)
-app.secret_key = "PLACEHOLDER_KEY"
+app.secret_key = os.getenv("SECRET_KEY", "Replace-With-Secret-Key")
+
 
 @app.route('/')
 def index():
@@ -18,7 +24,7 @@ def getContents():
 def login():
     data = request.get_json()
     password = data.get('password', '').lower()
-    if password == 'password':
+    if password == os.getenv("ADMIN_PASSWORD", "password"):
         session['admin'] = True
         return jsonify({'success': True}), 200
     return jsonify({'success': False}), 401
@@ -63,6 +69,9 @@ def createPlanet():
             targetGalaxy = galaxy
             break
 
+    if not targetGalaxy:
+        return jsonify({"error": "Target galaxy not found"}), 400
+
     angle = random.uniform(0, 2* math.pi)
     radius = random.randint(200, 1000)
 
@@ -86,6 +95,7 @@ def createPlanet():
     color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
     planet = {
+        "targetGalaxy": targetGalaxy['name'],
         "item": "planet",
         "image": "earth",
         "x": int(xPos),
@@ -97,16 +107,85 @@ def createPlanet():
         "contents": content
     }
 
-    targetGalaxy['contents'].append(planet)
+    if session.get('admin'):
+        targetGalaxy['contents'].append(planet)
 
+        try:
+            with open('contents.json', 'w') as f:
+                json.dump(contents, f, indent=2)
+        except Exception as e:
+            return jsonify({"error": f"Failed to save: {str(e)}"}), 500
+        
+        return jsonify({"planet": planet}), 201
+    else:
+        with open('pending.json', 'r') as f:
+            approveContents = json.load(f)
+        approveContents.append(planet)
+        try:
+            with open('pending.json', 'w') as f:
+                json.dump(approveContents, f, indent=2)
+        except Exception as e:
+            return jsonify({"error": f"Failed to save: {str(e)}"}), 500
+        
+        return jsonify({"planet": planet}), 201
+
+@app.route('/api/pendingplanets', methods=["GET"])
+def getPendingPlanets():
+    with open('pending.json', 'r') as f:
+        data = json.load(f)
+    return jsonify(data), 200
+
+@app.route('/api/approveplanet', methods=['POST'])
+def approvePlanet():
+    if not session.get('admin'):
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    with open('pending.json', 'r') as f:
+        pending = json.load(f)
+    
+    planet = pending.pop(0)
+
+    with open('contents.json', 'r') as f:
+        contents = json.load(f)
+
+    targetGalaxy = None
+    for galaxy in contents:
+        if galaxy.get('name') == planet['targetGalaxy']:
+            targetGalaxy = galaxy
+            break
+
+    if not targetGalaxy:
+        return jsonify({"error": "Target galaxy not found"}), 400
+    
+    targetGalaxy['contents'].append(planet)
     try:
+        with open('pending.json', 'w') as f:
+            json.dump(pending, f, indent=2)
         with open('contents.json', 'w') as f:
             json.dump(contents, f, indent=2)
     except Exception as e:
         return jsonify({"error": f"Failed to save: {str(e)}"}), 500
     
-    return jsonify({"planet": planet}), 201
-        
+    return jsonify({"success": True}), 200
+
+@app.route('/api/denyplanet', methods=['POST'])
+def denyPlanet():
+    if not session.get('admin'):
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    with open('pending.json', 'r') as f:
+        pending = json.load(f)
+    
+    planet = pending.pop(0)
+
+    try:
+        with open('pending.json', 'w') as f:
+            json.dump(pending, f, indent=2)
+    except Exception as e:
+        return jsonify({"error": f"Failed to save: {str(e)}"}), 500
+    
+    return jsonify({"success": True}), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)

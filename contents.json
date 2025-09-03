@@ -58,7 +58,10 @@
           },
           {
             "type": "link",
-            "content": ["Hello", "https://google.com"]
+            "content": [
+              "Hello",
+              "https://google.com"
+            ]
           },
           {
             "type": "br"
@@ -75,7 +78,10 @@
           },
           {
             "type": "code",
-            "content": [true, "console.log('Welcome!');"]
+            "content": [
+              true,
+              "console.log('Welcome!');"
+            ]
           },
           {
             "type": "br"
@@ -106,7 +112,10 @@
               },
               {
                 "type": "image",
-                "content": ["Screenshot", "static/images/project.png"]
+                "content": [
+                  "Screenshot",
+                  "static/images/project.png"
+                ]
               }
             ]
           }
@@ -220,7 +229,10 @@
           },
           {
             "type": "link",
-            "content": ["Google", "https://google.com"]
+            "content": [
+              "Google",
+              "https://google.com"
+            ]
           }
         ]
       },
@@ -237,6 +249,23 @@
           {
             "type": "italic",
             "content": "Test"
+          }
+        ]
+      },
+      {
+        "targetGalaxy": "Public",
+        "item": "planet",
+        "image": "earth",
+        "x": 96,
+        "y": -316,
+        "size": 125,
+        "color": "#4d55e3",
+        "type": "panel",
+        "name": "Test Planet",
+        "contents": [
+          {
+            "type": "text",
+            "content": "Hello world!"
           }
         ]
       }
@@ -269,8 +298,8 @@
         "y": 0,
         "size": 350,
         "color": "#ffffff",
-        "type": "manageadmin",
-        "name": "Manage Public Submissions"
+        "type": "managepending",
+        "name": "Manage Pending Submissions"
       },
       {
         "item": "planet",
@@ -291,38 +320,6 @@
         "color": "#ffffff",
         "type": "logout",
         "name": "logout"
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": 100,
-        "y": 100,
-        "size": 188,
-        "color": "#7e6a62",
-        "type": "panel",
-        "name": "Test",
-        "contents": [
-          {
-            "type": "text",
-            "content": "Test"
-          }
-        ]
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": -300,
-        "y": 100,
-        "size": 155,
-        "color": "#c83a77",
-        "type": "panel",
-        "name": "Test3",
-        "contents": [
-          {
-            "type": "bold",
-            "content": "G"
-          }
-        ]
       }
     ]
   }

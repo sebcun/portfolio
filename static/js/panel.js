@@ -446,6 +446,127 @@ function showAdminCreatePanel(galaxies) {
   infoPanel.classList.remove("hidden");
 }
 
+function showPendingPanel() {
+  panelName.textContent = "Pending Planets";
+  panelContainer.innerHTML = "<p>Loading pending planets...</p>";
+  infoPanel.classList.remove("hidden");
+
+  let pendingPlanets = [];
+  let currentIndex = 0;
+
+  fetch("/api/pendingplanets")
+    .then((response) => response.json())
+    .then((data) => {
+      pendingPlanets = data;
+      if (pendingPlanets.length === 0) {
+        panelContainer.innerHTML = "<p>No pending planets to review</p>";
+        return;
+      }
+      showCurrentPlanet();
+    });
+
+  function showCurrentPlanet() {
+    if (currentIndex >= pendingPlanets.length) {
+      panelContainer.innerHTML = "<p>No pending planets to review</p>";
+      return;
+    }
+
+    const planet = pendingPlanets[currentIndex];
+    const contentHtml = generateContentHtml(planet.contents);
+
+    panelContainer.innerHTML = `
+    <div id="approve-contents">
+        <h3>${planet.name}</h3>
+        <p><strong>Position:</strong> (${planet.x}, ${planet.y})</p>
+        <p><strong>Size:</strong> ${planet.size}</p>
+        <div><strong>Content:</strong></div>
+        <div>${contentHtml}</div>
+        <br>
+        <button id="approve-btn">Approve</button>
+        <button id="deny-btn">Deny</button>
+    </div>`;
+    const approveBtn = document.getElementById("approve-btn");
+    const denyBtn = document.getElementById("deny-btn");
+
+    approveBtn.addEventListener("click", async () => {
+      try {
+        approveBtn.enabled = false;
+        denyBtn.enabled = false;
+        const response = await fetch(`/api/approveplanet`, {
+          method: "POST",
+        });
+        if (response.ok) {
+          currentIndex++;
+          showCurrentPlanet();
+          showToast("Planet approved!", "success");
+        }
+        approveBtn.enabled = true;
+        denyBtn.enabled = true;
+      } catch (error) {
+        showToast(`There was an issue! ${error}`, "danger");
+        approveBtn.enabled = true;
+        denyBtn.enabled = true;
+      }
+    });
+
+    denyBtn.addEventListener("click", async () => {
+      try {
+        approveBtn.enabled = false;
+        denyBtn.enabled = false;
+        const response = await fetch(`/api/denyplanet`, {
+          method: "POST",
+        });
+        if (response.ok) {
+          currentIndex++;
+          showCurrentPlanet();
+          showToast("Planet rejected!", "success");
+        }
+        approveBtn.enabled = true;
+        denyBtn.enabled = true;
+      } catch (error) {
+        showToast(`There was an issue! ${error}`, "danger");
+        approveBtn.enabled = true;
+        denyBtn.enabled = true;
+      }
+    });
+  }
+
+  function generateContentHtml(contents) {
+    const blockHandlers = {
+      br: () => "<br>",
+      bold: (block) => `<span class="bold">${block.content}</span>`,
+      text: (block) => `<span>${block.content}</span>`,
+      italic: (block) => `<span class="italic">${block.content}</span>`,
+      italicbold: (block) =>
+        `<span class="italic bold">${block.content}</span>`,
+      link: (block) =>
+        `<a href="${block.content[1]}" target="_blank">${block.content[0]}</a>`,
+      image: (block) =>
+        `<img src="${block.content[1]}" alt="${block.content[0]}" style="max-width: 100%;">`,
+      code: (block) =>
+        block.content[0]
+          ? `<code>${block.content[1]}</code>`
+          : `<pre><code>${block.content[1]}</code></pre>`,
+      card: (block) => {
+        const subContent = block.content
+          .map((subBlock) => {
+            const subHandler = blockHandlers[subBlock.type];
+            return subHandler ? subHandler(subBlock) : "";
+          })
+          .join("");
+        return `<div class="card">${subContent}</div>`;
+      },
+    };
+
+    return contents
+      .map((block) => {
+        const handler = blockHandlers[block.type];
+        return handler ? handler(block) : "";
+      })
+      .join("");
+  }
+}
+
 panelClose.addEventListener("click", function () {
   infoPanel.classList.add("hidden");
 });

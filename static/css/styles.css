@@ -268,3 +268,27 @@ body {
 #toast.success {
   background: rgba(31, 255, 68, 0.8);
 }
+
+#approve-contents button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  transition: background 0.3s ease, color 0.3s ease, font-weight 0.3s ease;
+}
+
+#approve-contents button#approve-btn:hover {
+  background: rgb(127, 231, 144);
+  color: black;
+  font-weight: 800;
+}
+
+#approve-contents button#deny-btn:hover {
+  background: rgb(231, 127, 127);
+  color: black;
+  font-weight: 800;
+}
