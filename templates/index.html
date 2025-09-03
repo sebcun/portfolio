@@ -63,6 +63,11 @@
         <div id="panel-container"></div>
       </div>
     </div>
+
+    {# Toasts #}
+    <div id="toast">
+      <span id="toast-text">Hello!</span>
+    </div>
   </body>
 
   {# Scripts #} {# Imports #}
@@ -70,6 +75,7 @@
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/space-engine.js') }}"></script>
   <script src="{{ url_for('static', filename='js/sound-engine.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/toasts.js') }}"></script>
 
   {# Paths #}
   <script>

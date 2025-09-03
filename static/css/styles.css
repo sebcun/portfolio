@@ -40,3 +40,189 @@ body {
 .card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+/* Forms */
+#create-planet-form {
+  color: white;
+}
+
+#create-planet-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+#create-planet-form input[type="text"],
+#create-planet-form textarea,
+#create-planet-form select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  font-family: inherit;
+}
+
+#create-planet-form select option {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 10px;
+  white-space: normal;
+  max-width: 100%;
+  word-wrap: "break-work";
+}
+
+#block-builder {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#add-block-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+#add-block-buttons button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s ease;
+}
+
+#add-block-buttons button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#blocks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.block-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.block-item strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.block-item input,
+.block-item text-area {
+  width: 100%;
+  margin-bottom: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.block-item textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.remove-block {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.5);
+  border: none;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.remove-block:hover {
+  background: rgba(255, 0, 0, 0.7);
+}
+
+#create-planet-form button[type="submit"] {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+#create-planet-form button[type="submit"]:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.image-picker {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.image-picker label {
+  cursor: pointer;
+  font-size: 24px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.image-picker input[type="radio"] {
+  display: none;
+}
+
+.image-picker input[type="radio"]:checked + label {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Toasts */
+#toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 22px;
+  transform: translateY(10px);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#toast.default {
+  background: rgba(153, 0, 255, 0.8);
+}
+
+#toast.danger {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+#toast.success {
+  background: rgba(31, 255, 68, 0.8);
+}

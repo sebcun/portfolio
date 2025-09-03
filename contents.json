@@ -83,10 +83,20 @@
           {
             "type": "card",
             "content": [
-              { "type": "bold", "content": "Project Title" },
-              { "type": "br" },
-              { "type": "text", "content": "A cool project description." },
-              { "type": "br" },
+              {
+                "type": "bold",
+                "content": "Project Title"
+              },
+              {
+                "type": "br"
+              },
+              {
+                "type": "text",
+                "content": "A cool project description."
+              },
+              {
+                "type": "br"
+              },
               {
                 "type": "link",
                 "content": [
@@ -123,6 +133,138 @@
         "type": "link",
         "name": "GitHub",
         "contents": "https://github.com/sebcun"
+      },
+      {
+        "item": "planet",
+        "image": "github",
+        "x": 780,
+        "y": -300,
+        "size": 250,
+        "color": "#ffffff",
+        "type": "create",
+        "name": "Create"
+      },
+      {
+        "item": "planet",
+        "image": "earth",
+        "x": 266,
+        "y": -544,
+        "size": 114,
+        "color": "#385fe5",
+        "type": "panel",
+        "name": "Test",
+        "contents": [
+          {
+            "type": "italic",
+            "content": "Test"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "item": "galaxy",
+    "image": "milkyway",
+    "x": 300,
+    "y": 0,
+    "size": 250,
+    "color": "#000000",
+    "name": "Public",
+    "contents": [
+      {
+        "item": "planet",
+        "image": "earth",
+        "x": 0,
+        "y": 0,
+        "size": 350,
+        "color": "#ffffff",
+        "type": "home",
+        "name": "Home"
+      },
+      {
+        "item": "planet",
+        "image": "github",
+        "x": 780,
+        "y": -300,
+        "size": 250,
+        "color": "#ffffff",
+        "type": "create",
+        "name": "Create"
+      },
+      {
+        "item": "planet",
+        "image": "earth",
+        "x": 637,
+        "y": 438,
+        "size": 102,
+        "color": "#6fe20c",
+        "type": "panel",
+        "name": "Test",
+        "contents": [
+          {
+            "type": "text",
+            "content": "Hello! "
+          },
+          {
+            "type": "bold",
+            "content": "Nice to meet you."
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": ["Google", "https://google.com"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "item": "galaxy",
+    "image": "milkyway",
+    "x": 600,
+    "y": 0,
+    "size": 250,
+    "color": "#000000",
+    "name": "Admin",
+    "protected": "SEBCUN",
+    "contents": [
+      {
+        "item": "planet",
+        "image": "earth",
+        "x": 0,
+        "y": 0,
+        "size": 350,
+        "color": "#ffffff",
+        "type": "home",
+        "name": "Home"
+      },
+      {
+        "item": "planet",
+        "image": "github",
+        "x": 780,
+        "y": -300,
+        "size": 250,
+        "color": "#ffffff",
+        "type": "createadmin",
+        "name": "Create"
+      },
+      {
+        "item": "planet",
+        "image": "github",
+        "x": 780,
+        "y": 600,
+        "size": 250,
+        "color": "#ffffff",
+        "type": "logout",
+        "name": "logout"
       }
     ]
   }

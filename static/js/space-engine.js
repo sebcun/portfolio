@@ -42,6 +42,10 @@ class SpaceEngine {
     };
     this.galaxyImages.milkyway.src = milkywayImagePath;
 
+    // Protected Galaxies
+    this.unlockedGalaxies = new Set();
+    this.keySequence = "";
+
     this.setupCanvas();
     this.bindEvents();
   }
@@ -65,6 +69,8 @@ class SpaceEngine {
     this.canvas.addEventListener("mousemove", (e) => this.onMouseMove(e));
     this.canvas.addEventListener("wheel", (e) => this.onWheel(e));
     this.canvas.addEventListener("click", (e) => this.onClick(e));
+
+    window.addEventListener("keydown", (e) => this.onKeyDown(e));
   }
 
   // Convert screen X and Y to actual map X and Y
@@ -182,7 +188,11 @@ class SpaceEngine {
     const hoveredItem = this.getItemAt(worldPos.x, worldPos.y, itemsToCheck);
     this.currentHovered = hoveredItem;
 
-    this.canvas.style.cursor = hoveredItem ? "pointer" : "grab";
+    if (hoveredItem?.protected && !this.unlockedGalaxies.has(hoveredItem)) {
+      return;
+    } else {
+      this.canvas.style.cursor = hoveredItem ? "pointer" : "grab";
+    }
   }
 
   // On Wheel, change zoom
@@ -204,8 +214,37 @@ class SpaceEngine {
           : this.currentContents;
       const clickedItem = this.getItemAt(worldPos.x, worldPos.y, itemsToCheck);
 
-      if (clickedItem && this.onItemClick) {
-        this.onItemClick(clickedItem);
+      if (clickedItem) {
+        if (this.onItemClick) {
+          this.onItemClick(clickedItem);
+        }
+      }
+    }
+  }
+
+  // On Key Down
+  onKeyDown(e) {
+    const key = e.key.toLowerCase();
+
+    if (key === "r") {
+      this.keySequence = "";
+      return;
+    }
+
+    this.keySequence += key;
+
+    for (let galaxy of this.items) {
+      if (
+        galaxy.protected &&
+        galaxy.protected.toLowerCase() === this.keySequence
+      ) {
+        showToast(
+          `You unlocked the secret ${galaxy.name} galaxy!`,
+          "default",
+          5000
+        );
+        this.unlockedGalaxies.add(galaxy);
+        this.keySequence = "";
       }
     }
   }
@@ -325,6 +364,9 @@ class SpaceEngine {
 
   // Render Galaxy
   renderGalaxy(galaxy) {
+    if (galaxy.protected && !this.unlockedGalaxies.has(galaxy)) {
+      return;
+    }
     const isHovered = this.currentHovered === galaxy;
 
     const targetMultiplier = isHovered ? 1.15 : 1.0;
