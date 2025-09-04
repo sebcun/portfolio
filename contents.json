@@ -1,136 +1,22 @@
 [
   {
     "item": "galaxy",
-    "image": "milkyway",
-    "x": 0,
+    "image": "blue",
+    "x": -600,
     "y": 0,
-    "size": 250,
+    "size": 300,
     "color": "#000000",
-    "name": "About me",
+    "name": "About me | Links",
     "contents": [
       {
         "item": "planet",
         "image": "earth",
         "x": 0,
         "y": 0,
-        "size": 350,
+        "size": 400,
         "color": "#ffffff",
         "type": "home",
         "name": "Home"
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": 340,
-        "y": 100,
-        "size": 350,
-        "color": "#ffffff",
-        "type": "panel",
-        "name": "Example",
-        "contents": [
-          {
-            "type": "bold",
-            "content": "asdasd"
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "text",
-            "content": "asd"
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "italic",
-            "content": "asd"
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "italicbold",
-            "content": "asd"
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "link",
-            "content": [
-              "Hello",
-              "https://google.com"
-            ]
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "image",
-            "content": [
-              "Hello",
-              "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
-            ]
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "code",
-            "content": [
-              true,
-              "console.log('Welcome!');"
-            ]
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "card",
-            "content": [
-              {
-                "type": "bold",
-                "content": "Project Title"
-              },
-              {
-                "type": "br"
-              },
-              {
-                "type": "text",
-                "content": "A cool project description."
-              },
-              {
-                "type": "br"
-              },
-              {
-                "type": "link",
-                "content": [
-                  "View on GitHub",
-                  "https://github.com/sebcun/project"
-                ]
-              },
-              {
-                "type": "image",
-                "content": [
-                  "Screenshot",
-                  "static/images/project.png"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": 780,
-        "y": 300,
-        "size": 250,
-        "color": "#88ccff",
-        "type": "panel",
-        "name": "About Me",
-        "contents": "<bold>Hi!</bold> My name is <b>Sebastian Cunningham</b> and I am a 17 year old highschool student from <b>Melbourne, Australia</b>.<br><br>In the future, I want to become a software engineer/developer, or go into cybersecurity.<br><br>In my spare time, I am a competitive swimmer training up to 18 hours every week. Apart from that, I also like to code small side projects, cook (savoury, never sweet), and build LEGO."
       },
       {
         "item": "planet",
@@ -144,28 +30,56 @@
         "contents": "https://github.com/sebcun"
       },
       {
+        "targetGalaxy": "About me | Links",
         "item": "planet",
-        "image": "github",
+        "image": "blue",
         "x": 780,
-        "y": -300,
+        "y": 280,
         "size": 250,
-        "color": "#ffffff",
-        "type": "create",
-        "name": "Create"
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": 266,
-        "y": -544,
-        "size": 114,
-        "color": "#385fe5",
+        "color": "#4cbbb9",
         "type": "panel",
-        "name": "Test",
+        "name": "Who am I?",
+        "author": "127.0.0.1",
         "contents": [
           {
-            "type": "italic",
-            "content": "Test"
+            "type": "bold",
+            "content": "Hi!"
+          },
+          {
+            "type": "text",
+            "content": " My name is"
+          },
+          {
+            "type": "bold",
+            "content": " Sebastian Cunningham"
+          },
+          {
+            "type": "text",
+            "content": " and I am a 17 year old highschool student from "
+          },
+          {
+            "type": "bold",
+            "content": " Melbourne, Australia."
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "text",
+            "content": "In the future, I want to become a software engineer/developer, or go into cybersecurity."
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "text",
+            "content": "In my spare time, I am a competitive swimmer training up to 18 hours every week. Apart from that, I also like to code small side projects, cook (savoury, never sweet), and build LEGO."
           }
         ]
       }
@@ -173,10 +87,158 @@
   },
   {
     "item": "galaxy",
-    "image": "milkyway",
-    "x": 300,
+    "image": "white",
+    "x": -200,
+    "y": -50,
+    "size": 300,
+    "color": "#000000",
+    "name": "Projects",
+    "contents": [
+      {
+        "item": "planet",
+        "image": "earth",
+        "x": 0,
+        "y": 0,
+        "size": 400,
+        "color": "#ffffff",
+        "type": "home",
+        "name": "Home"
+      },
+      {
+        "targetGalaxy": "Projects",
+        "item": "planet",
+        "image": "red",
+        "x": 561,
+        "y": 200,
+        "size": 250,
+        "color": "#84d3ca",
+        "type": "panel",
+        "name": "myLegoDB",
+        "author": "127.0.0.1",
+        "contents": [
+          {
+            "type": "text",
+            "content": "myLegoDB is a website built with Flask that allows users to share LEGO sets they have built. Users can register for accounts, upload images of their LEGO sets, browse other users' collections, like uploads, favourite sets, and follow other users."
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "text",
+            "content": "This project was created for the Hackclub YSWS, Authly. A challenge where the goal was to create a unique and fun authentication system. For me, this was to create a LEGO minifigure builder for users, and a \"Build Your Password\" where you place bricks of different sizes and colours on a grid for your password."
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": ["Github", "https://github.com/sebcun/myLegoDB"]
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": [
+              "Github Readme",
+              "https://raw.githubusercontent.com/sebcun/myLegoDB/refs/heads/main/readme.md"
+            ]
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": ["Demo", "https://lego.sebcun.com"]
+          }
+        ]
+      },
+      {
+        "targetGalaxy": "Projects",
+        "item": "planet",
+        "image": "orange",
+        "x": 392,
+        "y": -350,
+        "size": 250,
+        "color": "#52f15d",
+        "type": "panel",
+        "name": "TimeTrove",
+        "author": "127.0.0.1",
+        "contents": [
+          {
+            "type": "text",
+            "content": "TimeTrove is a web application for creating, storing, and opening digital time capsules. Users can write messages, upload files, and set a future date for their capsule to be opened. When the time arrives, the capsule becomes accessible, and users can retrieve their memories or files."
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": ["Github", "https://github.com/sebcun/TimeTrove"]
+          },
+          {
+            "type": "br"
+          },
+          {
+            "type": "link",
+            "content": [
+              "Github Readme",
+              "https://github.com/sebcun/TimeTrove/blob/main/README.md"
+            ]
+          }
+        ]
+      },
+      {
+        "targetGalaxy": "Projects",
+        "item": "planet",
+        "image": "white",
+        "x": -400,
+        "y": 273,
+        "size": 250,
+        "color": "#39528d",
+        "type": "link",
+        "name": "Portfolio (This!)",
+        "author": "127.0.0.1",
+        "contents": "https://github.com/sebcun/portfolio"
+      }
+    ]
+  },
+  {
+    "item": "galaxy",
+    "image": "cyan",
+    "x": 200,
     "y": 0,
-    "size": 250,
+    "size": 300,
+    "color": "#000000",
+    "name": "Blog",
+    "contents": [
+      {
+        "item": "planet",
+        "image": "earth",
+        "x": 0,
+        "y": 0,
+        "size": 400,
+        "color": "#ffffff",
+        "type": "home",
+        "name": "Home"
+      }
+    ]
+  },
+  {
+    "item": "galaxy",
+    "image": "green",
+    "x": 600,
+    "y": -50,
+    "size": 300,
     "color": "#000000",
     "name": "Public",
     "contents": [
@@ -192,90 +254,21 @@
       },
       {
         "item": "planet",
-        "image": "github",
-        "x": 780,
-        "y": -300,
+        "image": "white",
+        "x": 215,
+        "y": -330,
         "size": 250,
         "color": "#ffffff",
         "type": "create",
-        "name": "Create"
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": 637,
-        "y": 438,
-        "size": 102,
-        "color": "#6fe20c",
-        "type": "panel",
-        "name": "Test",
-        "contents": [
-          {
-            "type": "text",
-            "content": "Hello! "
-          },
-          {
-            "type": "bold",
-            "content": "Nice to meet you."
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "br"
-          },
-          {
-            "type": "link",
-            "content": [
-              "Google",
-              "https://google.com"
-            ]
-          }
-        ]
-      },
-      {
-        "item": "planet",
-        "image": "earth",
-        "x": 731,
-        "y": 540,
-        "size": 117,
-        "color": "#e72791",
-        "type": "panel",
-        "name": "Test",
-        "contents": [
-          {
-            "type": "italic",
-            "content": "Test"
-          }
-        ]
-      },
-      {
-        "targetGalaxy": "Public",
-        "item": "planet",
-        "image": "earth",
-        "x": 96,
-        "y": -316,
-        "size": 125,
-        "color": "#4d55e3",
-        "type": "panel",
-        "name": "Test Planet",
-        "contents": [
-          {
-            "type": "text",
-            "content": "Hello world!"
-          }
-        ]
+        "name": "Create Your Own Planet"
       }
     ]
   },
   {
     "item": "galaxy",
-    "image": "milkyway",
-    "x": 600,
-    "y": 0,
+    "image": "red",
+    "x": 0,
+    "y": -300,
     "size": 250,
     "color": "#000000",
     "name": "Admin",
@@ -293,7 +286,7 @@
       },
       {
         "item": "planet",
-        "image": "earth",
+        "image": "blue",
         "x": -780,
         "y": 0,
         "size": 350,
@@ -303,7 +296,7 @@
       },
       {
         "item": "planet",
-        "image": "github",
+        "image": "orange",
         "x": 780,
         "y": -300,
         "size": 250,
@@ -313,7 +306,7 @@
       },
       {
         "item": "planet",
-        "image": "github",
+        "image": "pink",
         "x": 780,
         "y": 600,
         "size": 250,

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request, session
 from dotenv import load_dotenv
-import json, math, random, os
+import json, math, random, os, datetime
 
 
 load_dotenv()
@@ -9,6 +9,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "Replace-With-Secret-Key")
 
+rateLimits = {}
 
 @app.route('/')
 def index():
@@ -63,6 +64,15 @@ def createPlanet():
     if not contents:
         return jsonify({"error": "No contents found"}), 400
     
+    if not session.get('admin'):
+        ip = request.remote_addr
+        now = datetime.datetime.now()
+        lastTimeStr = rateLimits.get(ip)
+        if lastTimeStr:
+            lastTime = datetime.datetime.fromisoformat(lastTimeStr)
+            if (now - lastTime).total_seconds() < 1800:
+                return jsonify({"error": "30 mins between each planet"}), 429
+    
     targetGalaxy = None
     for galaxy in contents:
         if galaxy.get('name') == galaxyName:
@@ -83,10 +93,10 @@ def createPlanet():
     if size:
         sizeMap = {
             "size-xs": 100,
-            "size-s": 125,
-            "size-m": 150,
-            "size-l": 175,
-            "size-xl": 200
+            "size-s": 175,
+            "size-m": 250,
+            "size-l": 300,
+            "size-xl": 400
         }
         size = sizeMap.get(size, 150)
     else:
@@ -97,13 +107,14 @@ def createPlanet():
     planet = {
         "targetGalaxy": targetGalaxy['name'],
         "item": "planet",
-        "image": "earth",
+        "image": image,
         "x": int(xPos),
         "y": int(yPos),
         "size": size,
         "color": color,
         "type": "panel",
         "name": name,
+        "author": request.remote_addr,
         "contents": content
     }
 
@@ -127,10 +138,17 @@ def createPlanet():
         except Exception as e:
             return jsonify({"error": f"Failed to save: {str(e)}"}), 500
         
+        ip = request.remote_addr
+        now = datetime.datetime.now()
+        rateLimits[ip] = now.isoformat()
+        
         return jsonify({"planet": planet}), 201
 
 @app.route('/api/pendingplanets', methods=["GET"])
 def getPendingPlanets():
+    if not session.get('admin'):
+        return jsonify({"error": "Unauthorized"}), 403
+    
     with open('pending.json', 'r') as f:
         data = json.load(f)
     return jsonify(data), 200
@@ -144,6 +162,9 @@ def approvePlanet():
         pending = json.load(f)
     
     planet = pending.pop(0)
+
+    if 'author' in planet:
+        del planet['author']
 
     with open('contents.json', 'r') as f:
         contents = json.load(f)

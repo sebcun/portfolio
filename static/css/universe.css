@@ -68,6 +68,13 @@
   backdrop-filter: blue(20px);
   transition: all 0.3s ease;
   animation: panelSlideIn 0.3s ease-out;
+  min-width: 30%;
+}
+
+@media (max-width: 768px) {
+  .info-panel {
+    min-width: 95%;
+  }
 }
 
 @keyframes panelSlideIn {

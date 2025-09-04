@@ -22,6 +22,10 @@ class SpaceEngine {
     this.lastMousePos = { x: 0, y: 0 };
     this.currentHovered = null;
     this.currentContents = undefined;
+    this.lastTouchPos = { x: 0, y: 0 };
+    this.touchStartPos = { x: 0, y: 0 };
+    this.initialDistance = 0;
+    this.initialZoom = 0;
 
     // Animation
     this.animationTime = 0;
@@ -31,16 +35,39 @@ class SpaceEngine {
     // Planet Images
     this.planetImages = {
       earth: new Image(),
+      blue: new Image(),
+      orange: new Image(),
+      pink: new Image(),
+      white: new Image(),
+      purple: new Image(),
+      green: new Image(),
+      red: new Image(),
       github: new Image(),
     };
-    this.planetImages.earth.src = earthImagePath;
+    this.planetImages.earth.src = planetImagePaths.earth;
+    this.planetImages.blue.src = planetImagePaths.blue;
+    this.planetImages.orange.src = planetImagePaths.orange;
+    this.planetImages.pink.src = planetImagePaths.pink;
+    this.planetImages.orange.src = planetImagePaths.orange;
+    this.planetImages.white.src = planetImagePaths.white;
+    this.planetImages.purple.src = planetImagePaths.purple;
+    this.planetImages.green.src = planetImagePaths.green;
+    this.planetImages.red.src = planetImagePaths.red;
     this.planetImages.github.src = githubImagePath;
 
-    // Galaxy Images
+    // Planet Images
     this.galaxyImages = {
-      milkyway: new Image(),
+      blue: new Image(),
+      green: new Image(),
+      red: new Image(),
+      white: new Image(),
+      cyan: new Image(),
     };
-    this.galaxyImages.milkyway.src = milkywayImagePath;
+    this.galaxyImages.blue.src = galaxyImagePaths.blue;
+    this.galaxyImages.green.src = galaxyImagePaths.green;
+    this.galaxyImages.red.src = galaxyImagePaths.red;
+    this.galaxyImages.white.src = galaxyImagePaths.white;
+    this.galaxyImages.cyan.src = galaxyImagePaths.cyan;
 
     // Protected Galaxies
     this.unlockedGalaxies = new Set();
@@ -69,6 +96,17 @@ class SpaceEngine {
     this.canvas.addEventListener("mousemove", (e) => this.onMouseMove(e));
     this.canvas.addEventListener("wheel", (e) => this.onWheel(e));
     this.canvas.addEventListener("click", (e) => this.onClick(e));
+
+    // Mobile
+    this.canvas.addEventListener("touchstart", (e) => this.onTouchStart(e), {
+      passive: false,
+    });
+    this.canvas.addEventListener("touchmove", (e) => this.onTouchMove(e), {
+      passive: false,
+    });
+    this.canvas.addEventListener("touchend", (e) => this.onTouchEnd(e), {
+      passive: false,
+    });
 
     window.addEventListener("keydown", (e) => this.onKeyDown(e));
   }
@@ -153,6 +191,13 @@ class SpaceEngine {
       }
     }
     return null;
+  }
+
+  // Get disntace
+  getDistance(touch1, touch2) {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
   //      Mouse Events
@@ -245,6 +290,104 @@ class SpaceEngine {
         );
         this.unlockedGalaxies.add(galaxy);
         this.keySequence = "";
+      }
+    }
+  }
+
+  onTouchStart(e) {
+    e.preventDefault();
+    this.touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+
+    if (e.touches.length === 1) {
+      this.isDragging = true;
+      this.lastMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      this.canvas.parentElement.classList.add("dragging");
+    } else if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      this.initialDistance = this.getDistance(touch1, touch2);
+      this.initialZoom = this.camera.zoom;
+    }
+  }
+
+  onTouchMove(e) {
+    e.preventDefault();
+
+    if (e.touches.length === 1 && this.isDragging) {
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - this.lastTouchPos.x;
+      const deltaY = touch.clientY - this.lastTouchPos.y;
+
+      this.camera.x -= deltaX / this.camera.zoom;
+      this.camera.y -= deltaY / this.camera.zoom;
+
+      this.constrainCamera();
+      this.lastTouchPos = { x: touch.clientX, y: touch.clientY };
+    } else if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentDistance = this.getDistance(touch1, touch2);
+      const zoomFactor = currentDistance / this.initialDistance;
+      const newZoom = Math.max(0.3, Math.min(3, this.initialZoom * zoomFactor));
+
+      const centerX = (touch1.clientX + touch2.clientX) / 2;
+      const cneterY = (touch1.clientY + touch2.clientY) / 2;
+      const worldPos = this.screenToWorld(centerX, centerY);
+
+      const oldZoom = this.camera.zoom;
+      this.camera.zoom = newZoom;
+
+      if (this.camera.zoom !== oldZoom) {
+        const zoomChange = this.camera.zoom / oldZoom;
+        this.camera.x = worldPos.x + (this.camera.x - worldPos.x) / zoomChange;
+        this.camera.y = worldPos.y + (this.camera.y - worldPos.y) / zoomChange;
+        this.constrainCamera();
+      }
+    }
+
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const worldPos = this.screenToWorld(touch.clientX, touch.clientY);
+      const itemsToCheck =
+        this.currentContents === undefined
+          ? this.galaxies
+          : this.currentContents;
+      const hoveredItem = this.getItemAt(worldPos.x, worldPos.y, itemsToCheck);
+      this.currentHovered = hoveredItem;
+
+      if (hoveredItem?.protected && !this.unlockedGalaxies.has(hoveredItem)) {
+      } else {
+        this.canvas.style.cursor = hoveredItem ? "pointer" : "grab";
+      }
+    }
+  }
+
+  onTouchEnd(e) {
+    e.preventDefault();
+    this.isDragging = false;
+    this.canvas.parentElement.classList.remove("dragging");
+
+    if (e.changedTouches.length === 1) {
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - this.touchStartPos.x;
+      const dy = touch.clientY - this.touchStartPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 10) {
+        const worldPos = this.screenToWorld(touch.clientX, touch.clientY);
+        const itemsToCheck =
+          this.currentContents === undefined
+            ? this.galaxies
+            : this.currentContents;
+        const clickedItem = this.getItemAt(
+          worldPos.x,
+          worldPos.y,
+          itemsToCheck
+        );
+
+        if (clickedItem && this.onItemClick) {
+          this.onItemClick(clickedItem);
+        }
       }
     }
   }

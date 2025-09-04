@@ -116,12 +116,12 @@ function showCreatePanel(galaxy) {
 
     <label>Planet:</label>
     <div class="image-picker">
-      <input type="radio" id="earth" name="image" value="earth" checked><label for="earth">🌍</label>
-      <input type="radio" id="milkyway" name="image" value="milkyway" checked><label for="milkyway">🌌</label>
-      <input type="radio" id="alien" name="image" value="alien" checked><label for="alien">👽</label>
-      <input type="radio" id="rocket" name="image" value="rocket" checked><label for="rocket">🚀</label>
-      <input type="radio" id="satellite" name="image" value="satellite" checked><label for="satellite">🛰️</label>
-      <input type="radio" id="meteor" name="image" value="meteor" checked><label for="meteor">☄️</label>
+      <input type="radio" id="blue" name="image" value="blue"><label for="blue"><img src=${planetImagePaths.blue} alt="Blue Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="green" name="image" value="green"><label for="green"><img src=${planetImagePaths.green} alt="Green Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="orange" name="image" value="orange"><label for="orange"><img src=${planetImagePaths.orange} alt="Orange Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="pink" name="image" value="pink"><label for="pink"><img src=${planetImagePaths.pink} alt="Pink Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="purple" name="image" value="purple"><label for="purple"><img src=${planetImagePaths.purple} alt="Purple Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="red" name="image" value="red"><label for="red"><img src=${planetImagePaths.red} alt="Red Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
     </div>
     <br>
     <div id="block-builder">
@@ -131,6 +131,14 @@ function showCreatePanel(galaxy) {
 
     <button type="submit">Create Planet</button>
   </form>`;
+
+  const imageRadios = document.querySelectorAll(
+    '.image-picker input[type="radio"]'
+  );
+  if (imageRadios.length > 0) {
+    const randomIndex = Math.floor(Math.random() * imageRadios.length);
+    imageRadios[randomIndex].checked = true;
+  }
 
   const blocksList = document.getElementById("blocks-list");
   let blockCounter = 0;
@@ -243,9 +251,14 @@ function showCreatePanel(galaxy) {
       if (response.ok) {
         infoPanel.classList.add("hidden");
         location.search = `?galaxy=${galaxy}`;
+        showToast("Your planet has been added for review.", "success");
       } else {
         const error = await response.json();
-        alert(`Error: ${error.error || "Failed to create planet"}`);
+        if (response.status === 429) {
+          showToast("You must wait 30 minutes between each planet.", "danger");
+        } else {
+          showToast("There was an issue.", "danger");
+        }
       }
     } catch (error) {
       alert("Network error. Please try again");
@@ -282,8 +295,8 @@ function showAdminCreatePanel(galaxies) {
 
     <label for="planet-positions">Position:</label>
     <div id="planet-positions">
-      <input type="number" id="planet-x" name="x" placeholder="X" required>
-      <input type="number" id="planet-y" name="y" placeholder="Y" required>
+      <input type="number" id="planet-x" name="x" placeholder="X">
+      <input type="number" id="planet-y" name="y" placeholder="Y">
     </div><br>
 
     <label>Size:</label>
@@ -298,12 +311,14 @@ function showAdminCreatePanel(galaxies) {
 
     <label>Planet:</label>
     <div class="image-picker">
-      <input type="radio" id="earth" name="image" value="earth" checked><label for="earth">🌍</label>
-      <input type="radio" id="milkyway" name="image" value="milkyway" checked><label for="milkyway">🌌</label>
-      <input type="radio" id="alien" name="image" value="alien" checked><label for="alien">👽</label>
-      <input type="radio" id="rocket" name="image" value="rocket" checked><label for="rocket">🚀</label>
-      <input type="radio" id="satellite" name="image" value="satellite" checked><label for="satellite">🛰️</label>
-      <input type="radio" id="meteor" name="image" value="meteor" checked><label for="meteor">☄️</label>
+      <input type="radio" id="blue" name="image" value="blue"><label for="blue" checked><img src=${planetImagePaths.blue} alt="Blue Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="green" name="image" value="green"><label for="green"><img src=${planetImagePaths.green} alt="Green Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="orange" name="image" value="orange"><label for="orange"><img src=${planetImagePaths.orange} alt="Orange Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="pink" name="image" value="pink"><label for="pink"><img src=${planetImagePaths.pink} alt="Pink Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="purple" name="image" value="purple"><label for="purple"><img src=${planetImagePaths.purple} alt="Purple Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="red" name="image" value="red"><label for="red"><img src=${planetImagePaths.red} alt="Red Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="earth" name="image" value="earth"><label for="earth"><img src=${planetImagePaths.earth} alt="Red Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
+      <input type="radio" id="white" name="image" value="white"><label for="white"><img src=${planetImagePaths.white} alt="Red Planet" style="width: 50px; height: 50px; cursor: pointer;"></label>
     </div>
     <br>
     <br>

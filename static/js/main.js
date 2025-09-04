@@ -141,6 +141,17 @@ class App {
               content:
                 "🌍 Click galaxies and planets to explore and learn more about me.",
             },
+            {
+              type: "br",
+            },
+            {
+              type: "br",
+            },
+            {
+              type: "text",
+              content:
+                "Please note, this site is not made for touch devices (phone, tablets, etc). It is still possible to view on there, but it is recommended to view on desktop or laptop.",
+            },
           ]);
         }
       }, 10);

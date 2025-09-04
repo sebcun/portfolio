@@ -80,12 +80,27 @@
   {# Paths #}
   <script>
     // Images
-    const earthImagePath =
-      "{{ url_for('static', filename='images/earth.png') }}";
+    const planetImagePaths = {
+      earth: "{{ url_for('static', filename='images/Earth.png') }}",
+      blue: "{{ url_for('static', filename='images/Blue.png') }}",
+      orange: "{{ url_for('static', filename='images/Orange.png') }}",
+      pink: "{{ url_for('static', filename='images/Pink.png') }}",
+      white: "{{ url_for('static', filename='images/White.png') }}",
+      green: "{{ url_for('static', filename='images/Green.png') }}",
+      purple: "{{ url_for('static', filename='images/Purple.png') }}",
+      red: "{{ url_for('static', filename='images/Red.png') }}",
+    };
+
+    const galaxyImagePaths = {
+      blue: "{{ url_for('static', filename='images/GalaxyBlue.png') }}",
+      green: "{{ url_for('static', filename='images/GalaxyGreen.png') }}",
+      red: "{{ url_for('static', filename='images/GalaxyRed.png') }}",
+      white: "{{ url_for('static', filename='images/GalaxyWhite.png') }}",
+      cyan: "{{ url_for('static', filename='images/GalaxyCyan.png') }}",
+    };
+
     const githubImagePath =
       "{{ url_for('static', filename='images/github.png') }}";
-    const milkywayImagePath =
-      "{{ url_for('static', filename='images/milkyway.png') }}";
     const clickSoundPath =
       "{{ url_for('static', filename='audios/click.mp3')}}";
     const ambienceSoundPath =
